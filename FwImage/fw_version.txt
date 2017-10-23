@@ -1,0 +1,2 @@
+sd8782_uapsta.bin(14.69.12.p53)
+sd8801_uapsta.bin(14.76.36.p70)
