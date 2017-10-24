@@ -28,9 +28,11 @@
 #define cpu_to_le32(val)                (val)
 #define cpu_to_le64(val)                (val)
 
-#define THIS_MODULE	                    1
 #define E2BIG                           7
+#define ENOTSUPP	                    524
 #define ERR_PTR(err)                    (void *)err
+    
+#define THIS_MODULE	                    1
 #define BIT(nr)			                (1UL << (nr))
 #define ARRAY_SIZE(a)	                (sizeof(a) / sizeof(a[0]))
 
@@ -48,7 +50,6 @@
 
 #define ARPHRD_ETHER 	                1
 
-#define ENOTSUPP	                    524
 #define NET_SKB_PAD	                    32
 #define	NUMA_NO_NODE	                (-1)
 

@@ -7,6 +7,7 @@ cwd = GetCurrentDir()
 define = []
 
 src = Split('''
+mwifi.c
 mport/mwifi_dev.c
 mport/firmware.c
 mport/skbuff.c
@@ -48,10 +49,9 @@ mlinux/moal_priv.c
 mlinux/moal_wext.c
 ''')
 
-if GetDepend(['RT_MWIFI_USING_STA']):
+if GetDepend(['MARVELLWIFI_USING_STA']):
     define += ['STA_SUPPORT']
-    if GetDepend(['RT_MWIFI_STA_WEXT']):
-        sta_src += sta_wext
+    sta_src += sta_wext
     src += sta_src
 
 uap_src = Split('''
@@ -66,15 +66,14 @@ mlinux/moal_uap_priv.c
 mlinux/moal_uap_wext.c
 ''')
 
-if GetDepend(['RT_MWIFI_USING_UAP']):
+if GetDepend(['MARVELLWIFI_USING_UAP']):
     define += ['UAP_SUPPORT']
-    if GetDepend(['RT_MWIFI_UAP_WEXT']):
-        uap_src += uap_wext
+    uap_src += uap_wext
     src += uap_src
 
 path = [cwd + '/mlinux', 
         cwd + '/mlan']
 
-group = DefineGroup('MarvellWiFi', src, depend = ['RT_USING_LWIP','RT_USING_SDIO','RT_USING_MWIFI'], CPPPATH = path, CPPDEFINES = define)
+group = DefineGroup('MarvellWiFi', src, depend = ['RT_USING_LWIP','RT_USING_SDIO','PKG_USING_MARVELLWIFI'], CPPPATH = path, CPPDEFINES = define)
 
 Return('group')

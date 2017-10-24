@@ -39,19 +39,15 @@ Change log:
 #include "../mport/netdevice.h"
 #include "../mport/kernel.h"
 
-#ifdef RT_MWIFI_USING_STA
-    #ifdef RT_MWIFI_REASSOCIATION
+#ifdef MARVELLWIFI_USING_STA
+    #ifdef MARVELLWIFI_STA_REASSOCIATION
     #define REASSOCIATION
     #endif
-    #ifdef RT_MWIFI_STA_WEXT
     #define STA_WEXT
-    #endif
 #endif
 
-#ifdef RT_MWIFI_USING_UAP
-    #ifdef RT_MWIFI_UAP_WEXT
+#ifdef MARVELLWIFI_USING_UAP
     #define UAP_WEXT
-    #endif
 #endif
 
 extern int  netif_rx(struct sk_buff *skb);
