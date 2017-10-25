@@ -2,7 +2,7 @@
 **Marvell WiFi** 是一款运行在RT-Thread实时操作系统上的sdio wifi驱动软件。
 
 # Hardware Requirements
-ROM: 512KB或以上  
+ROM: 512KB或以上  
 RAM: 128KB或以上  
 带SDIO 2.0 Host控制器  
 
