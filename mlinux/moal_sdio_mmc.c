@@ -434,6 +434,7 @@ woal_sdio_suspend(struct device *dev)
 		ret = -EBUSY;
 		goto done;
 	}
+#ifdef DEBUG_LEVEL1
 	if (woal_check_driver_status(handle)) {
 		PRINTM(MERROR, "Allow suspend when device is in hang state\n");
 #ifdef MMC_PM_SKIP_RESUME_PROBE
@@ -451,6 +452,7 @@ woal_sdio_suspend(struct device *dev)
 		LEAVE();
 		return MLAN_STATUS_SUCCESS;
 	}
+#endif  /* DEBUG_LEVEL1 */
 	handle->suspend_fail = MFALSE;
 	memset(&pm_info, 0, sizeof(pm_info));
 	if (MLAN_STATUS_SUCCESS ==

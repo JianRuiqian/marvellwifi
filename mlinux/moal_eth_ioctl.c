@@ -7646,7 +7646,7 @@ woal_priv_sleep_params_ioctl(moal_private * priv, t_u8 * respbuf,
 	mlan_ds_sleep_params *psleep_params = NULL;
 	int data[6] = { 0 }, i;
 	int user_data_len = 0, header_len = 0;
-	char err_str[][35] = { {"sleep clock error in ppm"},
+	static const char err_str[][35] = { {"sleep clock error in ppm"},
 	{"wakeup offset in usec"},
 	{"clock stabilization time in usec"},
 	{"value of reserved for debug"}
@@ -10180,6 +10180,7 @@ woal_android_priv_cmd(struct net_device *dev, struct ifreq *req)
 		len = sprintf((char *)buf, "OK\n") + 1;
 	} else if (strncmp(buf, "SETSUSPENDMODE", strlen("SETSUSPENDMODE")) ==
 		   0) {
+#ifdef DEBUG_LEVEL1
 		/* it will be done by GUI */
 		if (woal_check_driver_status(priv->phandle)) {
 			PRINTM(MERROR,
@@ -10189,6 +10190,7 @@ woal_android_priv_cmd(struct net_device *dev, struct ifreq *req)
 		} else {
 			len = sprintf((char *)buf, "OK\n") + 1;
 		}
+#endif  /* DEBUG_LEVEL1 */
 	} else if (strncmp(buf, "BTCOEXMODE", strlen("BTCOEXMODE")) == 0) {
 		len = sprintf((char *)buf, "OK\n") + 1;
 	} else if (strncmp(buf, "BTCOEXSCAN-START", strlen("BTCOEXSCAN-START"))

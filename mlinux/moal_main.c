@@ -281,7 +281,9 @@ u16 woal_select_queue(struct net_device *dev, struct sk_buff *skb);
 #endif
 #endif
 
+#ifdef DEBUG_LEVEL1
 mlan_debug_info info;
+#endif  /* DEBUG_LEVEL1 */
 
 //static int woal_netdevice_event(struct notifier_block *nb, unsigned long event,
 //				void *ptr);
@@ -2820,6 +2822,7 @@ done:
 	return ret;
 }
 
+#ifdef DEBUG_LEVEL1
 /**
  *  @brief Check driver status
  *
@@ -3018,6 +3021,7 @@ woal_mlan_debug_info(moal_private * priv)
 	PRINTM(MERROR, "------------mlan_debug_info End-------------\n");
 	LEAVE();
 }
+#endif  /* DEBUG_LEVEL1 */
 
 /**
  *  @brief This function handles the timeout of packet
@@ -3040,7 +3044,9 @@ woal_tx_timeout(struct net_device *dev)
 	woal_set_trans_start(dev);
 
 	if (priv->num_tx_timeout == NUM_TX_TIMEOUT_THRESHOLD) {
+#ifdef DEBUG_LEVEL1
 		woal_mlan_debug_info(priv);
+#endif  /* DEBUG_LEVEL1 */
 		woal_moal_debug_info(priv, NULL, MFALSE);
 	}
 
@@ -6181,8 +6187,10 @@ woal_cleanup_module(void)
 			continue;
 		if (!handle->priv_num)
 			goto exit;
+#ifdef DEBUG_LEVEL1
 		if (MTRUE == woal_check_driver_status(handle))
 			goto exit;
+#endif  /* DEBUG_LEVEL1 */
 #ifdef SDIO_SUSPEND_RESUME
 #ifdef MMC_PM_KEEP_POWER
 		if (handle->is_suspended == MTRUE) {
@@ -6297,6 +6305,9 @@ __setup("mfg_mode=", mfg_mode_setup);
 
 int mwifi_system_init(void)
 {
+    /* wait for sdio host setup */
+    mdelay(200);
+    
     if(woal_init_module())
     {
         woal_cleanup_module();
