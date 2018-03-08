@@ -74,6 +74,6 @@ if GetDepend(['MARVELLWIFI_USING_UAP']):
 path = [cwd + '/mlinux', 
         cwd + '/mlan']
 
-group = DefineGroup('MarvellWiFi', src, depend = ['RT_USING_LWIP','RT_USING_SDIO','PKG_USING_MARVELLWIFI'], CPPPATH = path, CPPDEFINES = define)
+group = DefineGroup('MarvellWiFi', src, depend = ['RT_USING_LWIP','RT_USING_SDIO','PKG_USING_WLANMARVELL'], CPPPATH = path, CPPDEFINES = define)
 
 Return('group')
