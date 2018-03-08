@@ -29,6 +29,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 4. libc库(RT_USING_LIBC)
 5. rt_hw_us_delay(请在bsp中自行实现)
 6. sdio host驱动(请在bsp中自行实现)
+7. dhcpd协议(RT_USING_DHCPD 可选，STA模式时用到)
 
 # Adding Method
 利用RT-Thread官方提供的env工具获取pakage并生成工程  
