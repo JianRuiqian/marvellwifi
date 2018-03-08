@@ -13,11 +13,11 @@ int request_firmware(const struct firmware **fw, const char *file)
         rt_kprintf("firmware:[%s] not found!\n");
         return -RT_ERROR;
     }
-    
+
     firmware = (struct firmware *)rt_malloc(sizeof(*firmware));
     if (firmware == RT_NULL)
         return -RT_ENOMEM;
-    
+
     firmware->data = RT_NULL;
     firmware->size = st.st_size;
     firmware->fd = open(file, O_RDONLY, 0);
