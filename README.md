@@ -26,35 +26,28 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 1. sdio驱动框架(RT_USING_SDIO)
 2. Lwip协议栈(RT_USING_LWIP)
 3. dfs虚拟文件系统(RT_USING_DFS)
-4. libc库(RT_USING_LIBC)     
+4. libc库(RT_USING_LIBC)
 5. rt_hw_us_delay(请在bsp中自行实现)
+6. sdio host驱动(请在bsp中自行实现)
 
 # Adding Method
 利用RT-Thread官方提供的env工具获取pakage并生成工程  
-或手动下载pakage添加到现有工程目录下，在rt_config.h中开启宏并用scons工具重新生成:
+或手动下载pakage添加到现有工程目录下，在rt_config.h中开启以下宏，并用scons工具重新生成mdk工程:
 
-    #define PKG_USING_MARVELLWIFI
+    #define PKG_USING_WLANMARVELL
     #define MARVELLWIFI_USING_STA
 
 # Initialize
-第一步：硬复位wifi芯片，可通过复位电路或GPIO控制实现。  
-第二步：若使用组件初始化
+第一步：硬复位wifi芯片，可连接MCU复位电路或通过GPIO控制实现。
+第二步：若使用组件初始化，则只需开启以下宏：
 
     #define RT_USING_COMPONENTS_INIT
-
-则只需在组件初始化之前初始化好sdio框架和sdio主机端驱动
-
-    rt_mmcsd_core_init();
-    stm32f4xx_sdio_init();
-    mmcsd_delay_ms(200);
-
-    rt_components_init();
 
 否则请先手动初始化本驱动所依赖的其他组件，再调用
 
     mwifi_system_init();
 
-注意，在第一次使用前，请在文件系统中新建目录：/mrvl并将本驱动FwImage文件夹下的固件放到此目录下。
+注意，在第一次使用前，请在目标板文件系统中新建目录：'/mrvl'，并将package中的FwImage文件夹下的固件放到该目录下。
 ![firmware.png][3]
 
 驱动加载时需要为芯片烧写固件，若加载成功可以在终端命令行中看到如下信息：
@@ -72,6 +65,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 
     mwifi mlan0 connect SSID -k PASSWORD    //连接SSID，密码PASSWORD
     mwifi mlan0 disconnect                  //断开连接
+    mwifi mlan0 reassoc -e                  //开启自动重连
     mwifi mlan0 pwrsave -e                  //进入低功耗模式
     mwifi mlan0 scan                        //扫描附近的热点
 
