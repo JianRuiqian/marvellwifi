@@ -2,65 +2,68 @@
 #include "netdevice.h"
 
 /* Net Device */
-
+#if RTTHREAD_VERSION < 30000
 static rt_err_t rt_mwifi_control(rt_device_t dev, rt_uint8_t cmd, void *args)
+#else
+static rt_err_t rt_mwifi_control(rt_device_t dev, int cmd, void *args)
+#endif
 {
-	switch(cmd)
-	{
-	case NIOCTL_GADDR:
-		/* get mac address */
-		if(args)
+    switch (cmd)
+    {
+    case NIOCTL_GADDR:
+        /* get mac address */
+        if (args)
         {
             struct net_device *ndev;
-            
+
             ndev = (struct net_device *)dev->user_data;
             rt_memcpy(args, ndev->dev_addr, 6);
         }
-		else return -RT_ERROR;
-		break;
+        else return -RT_ERROR;
+        break;
 
-	default :
-		break;
-	}
+    default :
+        break;
+    }
 
-	return RT_EOK;
+    return RT_EOK;
 }
 
 /* ethernet device interface */
 /* transmit packet. */
-static rt_err_t mwifi_eth_tx(rt_device_t dev, struct pbuf* p)
+static rt_err_t mwifi_eth_tx(rt_device_t dev, struct pbuf *p)
 {
-    struct pbuf* q;
+    struct pbuf *q;
     rt_uint32_t offset = 0;
     struct sk_buff *skb = NULL;
     struct net_device *ndev;
-    
+
     ndev = (struct net_device *)dev->user_data;
 
     skb = alloc_skb(p->tot_len + ndev->hard_header_len, 0);
     if (!skb) return RT_ENOMEM;
-    
+
     skb_reserve(skb, ndev->hard_header_len);
 
     for (q = p; q != NULL; q = q->next)
     {
         uint8_t *to;
 
-        to = (uint8_t*)((skb->data) + offset);
+        to = (uint8_t *)((skb->data) + offset);
         rt_memcpy(to, q->payload, q->len);
         offset += q->len;
     }
     skb->len = offset;
-    
+
     ndev->netdev_ops->ndo_start_xmit(skb, ndev);
-    
+
     return RT_EOK;
 }
 
 /* reception packet. */
 int netif_rx(struct sk_buff *skb)
 {
-    struct pbuf* p = NULL;
+    struct pbuf *p = NULL;
     struct eth_device *device;
     rt_uint32_t offset;
 
@@ -68,15 +71,15 @@ int netif_rx(struct sk_buff *skb)
     p = pbuf_alloc(PBUF_RAW, skb->len, PBUF_RAM);
     if (p != RT_NULL)
     {
-        struct pbuf* q;
+        struct pbuf *q;
 
         offset = 0;
-        for (q = p; q != NULL; q= q->next)
+        for (q = p; q != NULL; q = q->next)
         {
             rt_memcpy(q->payload, ((uint8_t *)skb->data + offset), q->len);
             offset += q->len;
         }
-        
+
         /* notify to upper layer */
         device = &(skb->dev->dev);
         if (device->netif->input(p, device->netif) != ERR_OK)
@@ -95,9 +98,9 @@ int netif_rx(struct sk_buff *skb)
 int register_netdev(struct net_device *dev)
 {
     rt_err_t err = -RT_ERROR;
-    
+
     /* When net_device's are persistent, this will be fatal. */
-	RT_ASSERT(dev->reg_state == NETREG_UNINITIALIZED);
+    RT_ASSERT(dev->reg_state == NETREG_UNINITIALIZED);
 
     dev->dev.parent.init = RT_NULL;
     dev->dev.parent.open = RT_NULL;
@@ -106,10 +109,10 @@ int register_netdev(struct net_device *dev)
     dev->dev.parent.write = RT_NULL;
     dev->dev.parent.control = rt_mwifi_control;
     dev->dev.parent.user_data = dev;
-    
+
     dev->dev.eth_rx = RT_NULL/*mwifi_eth_rx*/;
     dev->dev.eth_tx = mwifi_eth_tx;
-    
+
 
     if (!strncmp(dev->name, "mlan", strlen("mlan")))
     {
@@ -119,18 +122,18 @@ int register_netdev(struct net_device *dev)
     else if (!strncmp(dev->name, "uap", strlen("uap")))
     {
         rt_uint16_t flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
-    
-    #if LWIP_IGMP
+
+#if LWIP_IGMP
         /* IGMP support */
         flags |= NETIF_FLAG_IGMP;
-    #endif
+#endif
         /* register eth device */
         err = eth_device_init_with_flag(&dev->dev, dev->name, flags);
     }
     if (err == RT_EOK)
         dev->reg_state = NETREG_REGISTERED;
-    
-	return err;
+
+    return err;
 }
 
 void unregister_netdev(struct net_device *dev)
@@ -156,8 +159,9 @@ int dev_alloc_name(struct net_device *dev, const char *name)
     rt_device_t rtdev;
     int i = 0;
     int ret = -1;
-    
-    do {
+
+    do
+    {
         snprintf(buf, IFNAMSIZ, name, i);
         rtdev = rt_device_find(buf);
         if (!rtdev)
@@ -166,7 +170,8 @@ int dev_alloc_name(struct net_device *dev, const char *name)
             ret = 0;
             break;
         }
-    } while(++i);
-    
+    }
+    while (++i);
+
     return ret;
 }
