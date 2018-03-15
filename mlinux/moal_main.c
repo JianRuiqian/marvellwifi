@@ -6303,6 +6303,11 @@ __setup("mfg_mode=", mfg_mode_setup);
 #endif
 #endif
 
+#ifdef FINSH_USING_MSH
+#include <msh.h>
+const char cmd[] = "/mrvl/init.sh";
+#endif
+
 int mwifi_system_init(void)
 {
     /* wait for sdio host setup */
@@ -6311,11 +6316,17 @@ int mwifi_system_init(void)
     if(woal_init_module())
     {
         woal_cleanup_module();
-        
+        rt_kprintf("Marvell WiFi initial failed!\n");
+
         return -RT_ERROR;
     }
+
+#ifdef FINSH_USING_MSH
+    rt_kprintf("Marvell WiFi exec init.sh...\n");
+    msh_exec((char *)cmd, sizeof(cmd));
+#endif
     rt_kprintf("Marvell WiFi initialized!\n");
-    
+
     return RT_EOK;
 }
 INIT_APP_EXPORT(mwifi_system_init);

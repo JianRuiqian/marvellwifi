@@ -19,7 +19,7 @@
 
 /* tick */
 #if RTTHREAD_VERSION < 30000
-extern void rt_hw_us_delay(int us);
+extern void rt_hw_us_delay(rt_uint32_t us);
 #endif
 
 #define mdelay(ms)                      mmcsd_delay_ms(ms)

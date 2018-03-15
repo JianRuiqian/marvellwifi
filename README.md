@@ -39,7 +39,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
     #define MARVELLWIFI_USING_STA
 
 # Initialize
-第一步：硬复位wifi芯片，可连接MCU复位电路或通过GPIO控制实现。
+第一步：硬复位wifi芯片，可连接MCU复位电路或通过GPIO控制实现。  
 第二步：若使用组件初始化，则只需开启以下宏：
 
     #define RT_USING_COMPONENTS_INIT
