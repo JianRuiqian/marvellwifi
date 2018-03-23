@@ -40,6 +40,10 @@ static rt_err_t mwifi_eth_tx(rt_device_t dev, struct pbuf *p)
 
     ndev = (struct net_device *)dev->user_data;
 
+#if RT_LWIP_ETH_PAD_SIZE    /* ETH_PAD_SIZE */
+    pbuf_header(p, -RT_LWIP_ETH_PAD_SIZE); /* drop the padding word */
+#endif
+
     skb = alloc_skb(p->tot_len + ndev->hard_header_len, 0);
     if (!skb) return RT_ENOMEM;
 
@@ -57,6 +61,10 @@ static rt_err_t mwifi_eth_tx(rt_device_t dev, struct pbuf *p)
 
     ndev->netdev_ops->ndo_start_xmit(skb, ndev);
 
+#if RT_LWIP_ETH_PAD_SIZE    /* ETH_PAD_SIZE */
+    pbuf_header(p, RT_LWIP_ETH_PAD_SIZE); /* reclaim the padding word */
+#endif
+
     return RT_EOK;
 }
 
@@ -66,12 +74,23 @@ int netif_rx(struct sk_buff *skb)
     struct pbuf *p = NULL;
     struct eth_device *device;
     rt_uint32_t offset;
+    rt_uint16_t len;
+
+    len = skb->len;
+
+#if RT_LWIP_ETH_PAD_SIZE    /* ETH_PAD_SIZE */
+    len += RT_LWIP_ETH_PAD_SIZE; /* allow room for Ethernet padding */
+#endif
 
     /* allocate buffer */
-    p = pbuf_alloc(PBUF_RAW, skb->len, PBUF_RAM);
+    p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
     if (p != RT_NULL)
     {
         struct pbuf *q;
+
+#if RT_LWIP_ETH_PAD_SIZE    /* ETH_PAD_SIZE */
+        pbuf_header(p, -RT_LWIP_ETH_PAD_SIZE); /* drop the padding word */
+#endif
 
         offset = 0;
         for (q = p; q != NULL; q = q->next)
@@ -79,6 +98,10 @@ int netif_rx(struct sk_buff *skb)
             rt_memcpy(q->payload, ((uint8_t *)skb->data + offset), q->len);
             offset += q->len;
         }
+
+#if RT_LWIP_ETH_PAD_SIZE    /* ETH_PAD_SIZE */
+        pbuf_header(p, RT_LWIP_ETH_PAD_SIZE); /* reclaim the padding word */
+#endif
 
         /* notify to upper layer */
         device = &(skb->dev->dev);
