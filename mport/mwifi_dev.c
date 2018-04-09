@@ -44,7 +44,7 @@ static rt_err_t mwifi_eth_tx(rt_device_t dev, struct pbuf *p)
     pbuf_header(p, -RT_LWIP_ETH_PAD_SIZE); /* drop the padding word */
 #endif
 
-    skb = alloc_skb(p->tot_len + ndev->hard_header_len, 0);
+    skb = alloc_skb(p->tot_len + ndev->hard_header_len, GFP_KERNEL);
     if (!skb) return RT_ENOMEM;
 
     skb_reserve(skb, ndev->hard_header_len);

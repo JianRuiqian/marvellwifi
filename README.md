@@ -4,24 +4,27 @@
 # Hardware Requirements
 ROM: 512KB或以上  
 RAM: 128KB或以上  
-带SDIO 2.0 Host控制器  
 
 # WiFi Chips Support
-88w8782  
-88w8801  
+1. 88w8782  
+2. 88w8801  
+3. 88w8797(尚未测试)  
 ![88w8782.png][1]
+![88w8801.png][2]
 
 # Features
 1. STA, UAP模式(可共存，但无路由)
-2. 认证方式: OPEN/WPA2-PSK
+2. 认证方式: OPEN/WPA-PSK/WPA2-PSK
 3. 自动重连
 4. 低功耗模式
 5. 速率高(stm32f407驱动可达2MB/s)
 
 # Compiler
 MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选项下Misc Controls中添加 --gnu):  
-![mdk5(--gnu).png][2]
-
+![mdk5(--gnu).png][3]  
+若希望通过scons编译，需要在rtconfig.py中指定toolchains为armcc，并在CFLAGS中添加
+--gnu):  
+![armcc(--gnu).png][4]
 # Components Dependence
 1. sdio驱动框架(RT_USING_SDIO)
 2. Lwip协议栈(RT_USING_LWIP)
@@ -29,7 +32,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 4. libc库(RT_USING_LIBC)
 5. rt_hw_us_delay(请在bsp中自行实现)
 6. sdio host驱动(请在bsp中自行实现)
-7. dhcpd协议(RT_USING_DHCPD 可选，STA模式时用到)
+7. dhcpd协议(LWIP_USING_DHCPD 可选，STA模式时用到)
 
 # Adding Method
 利用RT-Thread官方提供的env工具获取pakage并生成工程  
@@ -48,11 +51,11 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 
     mwifi_system_init();
 
-注意，在第一次使用前，请在目标板文件系统中新建目录：'/mrvl'，并将package中的FwImage文件夹下的固件放到该目录下。
-![firmware.png][3]
+注意，在第一次使用前，请在目标板文件系统中新建目录：'/mrvl'，并将package中的FwImage文件夹下的固件放到该目录下。  
+![firmware.png][5]
 
-驱动加载时需要为芯片烧写固件，若加载成功可以在终端命令行中看到如下信息：
-![initialize.png][4]
+驱动加载时需要为芯片烧写固件，若加载成功可以在终端命令行中看到如下信息：  
+![initialize.png][6]
 
 # Usage
 提供msh下命令，键入
@@ -60,7 +63,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
     mwifi
 
 可查看用法：  
-![usage.png][5]
+![usage.png][7]
 
 ## Example
 
@@ -74,7 +77,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 
 # Attention
 1. 使用时注意调整任务优先级：tcpip > MOAL_WORKQ > sdio_irq = etx
-2. 若STA需要自动重连功能：请开启宏(MARVELLWIFI_STA_REASSOCIATION)
+2. 自动重连功能仍处于测试阶段，请不要在实际项目中使用该功能。
 
 ***
 
@@ -82,7 +85,9 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 
 
   [1]: image/88w8782.png "88w8782.png"
-  [2]: image/mdk5(--gnu).png "mdk5(--gnu).png"
-  [3]: image/firmware.png "firmware.png"
-  [4]: image/initialize.png "initialize.png"
-  [5]: image/usage.png "usage.png"
+  [2]: image/88w8801.png "88w8801.png"
+  [3]: image/mdk5(--gnu).png "mdk5(--gnu).png"
+  [4]: image/armcc(--gnu).png "armcc(--gnu).png"
+  [5]: image/firmware.png "firmware.png"
+  [6]: image/initialize.png "initialize.png"
+  [7]: image/usage.png "usage.png"
