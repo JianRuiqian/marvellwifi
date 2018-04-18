@@ -7646,11 +7646,14 @@ woal_priv_sleep_params_ioctl(moal_private * priv, t_u8 * respbuf,
 	mlan_ds_sleep_params *psleep_params = NULL;
 	int data[6] = { 0 }, i;
 	int user_data_len = 0, header_len = 0;
-	static const char err_str[][35] = { {"sleep clock error in ppm"},
+#ifdef DEBUG_LEVEL1
+	static const char err_str[][35] = { 
+    {"sleep clock error in ppm"},
 	{"wakeup offset in usec"},
 	{"clock stabilization time in usec"},
 	{"value of reserved for debug"}
 	};
+#endif  /* DEBUG_LEVEL1 */
 	mlan_status status = MLAN_STATUS_SUCCESS;
 
 	ENTER();
