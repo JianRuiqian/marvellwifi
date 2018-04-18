@@ -46,7 +46,7 @@ rt_err_t mwifi_start(struct net_device *ndev)
 
     ret = ndev->netdev_ops->ndo_do_ioctl
           (ndev, NULL, WOAL_UAP_FROYO_AP_BSS_START);
-#ifdef RT_USING_DHCPD
+#ifdef LWIP_USING_DHCPD
     extern void dhcpd_start(char *netif_name);
     dhcpd_start(ndev->name);
 #endif
@@ -62,7 +62,7 @@ rt_err_t mwifi_stop(struct net_device *ndev)
 
     ret = ndev->netdev_ops->ndo_do_ioctl
           (ndev, NULL, WOAL_UAP_FROYO_AP_BSS_STOP);
-#ifdef RT_USING_DHCPD
+#ifdef LWIP_USING_DHCPD
     extern void dhcpd_stop(void);
     dhcpd_stop();
 #endif
