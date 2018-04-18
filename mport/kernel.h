@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <rtthread.h>
+#include <rtdevice.h>
 #include "kernel_misc.h"
 #include "type.h"
 
@@ -35,22 +36,36 @@ extern void rt_hw_us_delay(rt_uint32_t us);
 #define down_interruptible(x)           rt_sem_take(x, RT_WAITING_FOREVER)
 #define down_trylock(x)                 rt_sem_trytake(x)
 
-/* wait_queue */
+/* waitqueue */
+#if RTTHREAD_VERSION < 30000
 #define wait_queue_head_t               struct rt_semaphore
 #define init_waitqueue_head(wq)         rt_sem_init(wq, "mw_waitq", 0, RT_IPC_FLAG_FIFO)
-#define wait_event_interruptible_exclusive(wq, condition) \
+#define wait_event_interruptible_exclusive(wq, condition)   \
         rt_sem_take(&wq, RT_WAITING_FOREVER)
 #define wait_event_interruptible(wq, condition) \
         rt_sem_take(&wq, RT_WAITING_FOREVER)
-#define wait_event_timeout(wq, condition, timeout)    \
+#define wait_event_timeout(wq, condition, timeout)  \
         rt_sem_take(&wq, timeout)
 #define wait_event_interruptible_timeout(wq, condition, timeout)    \
         rt_sem_take(&wq, timeout)
 #define wake_up(wq)                     rt_sem_release(wq)
 #define wake_up_interruptible(wq)       rt_sem_release(wq)
+#else
+#define wait_queue_head_t               rt_wqueue_t
+#define init_waitqueue_head(wq)         rt_list_init(wq)
+#define wait_event_interruptible_exclusive(wq, condition)   \
+        rt_wqueue_wait(&wq, condition, RT_WAITING_FOREVER)
+#define wait_event_interruptible(wq, condition) \
+        rt_wqueue_wait(&wq, condition, RT_WAITING_FOREVER)
+#define wait_event_timeout(wq, condition, timeout)  \
+        rt_wqueue_wait(&wq, condition, 1000 * timeout / RT_TICK_PER_SECOND)
+#define wait_event_interruptible_timeout(wq, condition, timeout)    \
+        rt_wqueue_wait(&wq, condition, 1000 * timeout / RT_TICK_PER_SECOND)
+#define wake_up(wq)                     rt_wqueue_wakeup(wq, RT_NULL)
+#define wake_up_interruptible(wq)       rt_wqueue_wakeup(wq, RT_NULL)
+#endif
 
 /* workqueue */
-#include <rtdevice.h>
 #define work_struct                     rt_work
 #define workqueue_struct                rt_workqueue
 #define INIT_WORK(_work, _func)         rt_work_init(_work, ((void (*)(struct rt_work*, void*))_func), NULL)

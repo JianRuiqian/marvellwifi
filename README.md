@@ -32,7 +32,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 4. libc库(RT_USING_LIBC)
 5. rt_hw_us_delay(请在bsp中自行实现)
 6. sdio host驱动(请在bsp中自行实现)
-7. dhcpd协议(LWIP_USING_DHCPD 可选，STA模式时用到)
+7. dhcpd协议(LWIP_USING_DHCPD optional，UAP模式时用到)
 
 # Adding Method
 利用RT-Thread官方提供的env工具获取pakage并生成工程  
@@ -77,7 +77,7 @@ MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选�
 
 # Attention
 1. 使用时注意调整任务优先级：tcpip > MOAL_WORKQ > sdio_irq = etx
-2. 自动重连功能仍处于测试阶段，请不要在实际项目中使用该功能。
+2. 自动重连功能(MARVELLWIFI_STA_REASSOCIATION)仍处于测试阶段，请不要在实际项目中使用该功能。
 
 ***
 
