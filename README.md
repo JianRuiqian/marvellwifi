@@ -20,9 +20,11 @@ RAM: 128KB或以上
 5. 速率高(stm32f407驱动可达2MB/s)
 
 # Compiler
-MDK5(注意: 由于本驱动含有大量gcc特性，需要在编译器C/C++选项下Misc Controls中添加 --gnu):  
-![mdk5(--gnu).png][3]  
-若希望通过scons编译，需要在rtconfig.py中指定toolchains为armcc，并在CFLAGS中添加
+1.可以使用GCC编译  
+2.或者添加到MDK5工程中编译  
+(注意: 由于驱动含有大量gcc特性，请在编译器C/C++选项下Misc Controls中添加 --gnu):  
+![mdk5(--gnu).png][3]  
+若希望通过scons编译，请在rtconfig.py中指定toolchains为armcc，并在CFLAGS中添加
 --gnu):  
 ![armcc(--gnu).png][4]
 # Components Dependence
