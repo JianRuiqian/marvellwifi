@@ -4,7 +4,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned long u32;
-typedef unsigned __int64 u64;
+typedef unsigned long long u64;
 
 typedef signed char s8;
 typedef signed short s16;
@@ -13,7 +13,7 @@ typedef signed long s32;
 typedef unsigned char __u8;
 typedef unsigned short __u16;
 typedef unsigned int __u32;
-typedef unsigned __int64 __u64;
+typedef unsigned long long __u64;
 
 typedef signed char __s8;
 typedef signed short __s16;
