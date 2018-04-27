@@ -20,7 +20,7 @@ RAM: 128KB或以上
 5. 速率高(stm32f407驱动可达2MB/s)
 
 # Compiler
-1.可以使用GCC编译  
+1.可以使用GCC编译  
 2.或者添加到MDK5工程中编译  
 (注意: 由于驱动含有大量gcc特性，请在编译器C/C++选项下Misc Controls中添加 --gnu):  
 ![mdk5(--gnu).png][3]  
