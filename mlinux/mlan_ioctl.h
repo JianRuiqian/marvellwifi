@@ -1223,7 +1223,7 @@ typedef struct _mlan_fw_info {
 } mlan_fw_info, *pmlan_fw_info;
 
 /** Version string buffer length */
-#define MLAN_MAX_VER_STR_LEN    48//128
+#define MLAN_MAX_VER_STR_LEN    128
 
 /** mlan_ver_ext data structure for MLAN_OID_GET_VER_EXT */
 typedef struct _mlan_ver_ext {
