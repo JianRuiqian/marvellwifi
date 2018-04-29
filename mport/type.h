@@ -106,4 +106,4 @@ typedef enum {
 	__GFP_HIGH
 } gfp_t;
 
-#endif /* !_MWIFIEX_DECL_H_ */
+#endif /* MPORT_TYPE_H */
