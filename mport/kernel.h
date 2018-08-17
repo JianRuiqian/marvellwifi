@@ -52,7 +52,11 @@ extern void rt_hw_us_delay(rt_uint32_t us);
 #define wake_up_interruptible(wq)       rt_sem_release(wq)
 #else
 #define wait_queue_head_t               rt_wqueue_t
+#if RTTHREAD_VERSION < 30100
 #define init_waitqueue_head(wq)         rt_list_init(wq)
+#else
+#define init_waitqueue_head(wq)         rt_wqueue_init(wq)
+#endif
 #define wait_event_interruptible_exclusive(wq, condition)   \
         rt_wqueue_wait(&wq, condition, RT_WAITING_FOREVER)
 #define wait_event_interruptible(wq, condition) \
