@@ -6303,16 +6303,11 @@ __setup("mfg_mode=", mfg_mode_setup);
 #endif
 #endif
 
-#if defined RT_USING_FINSH && defined FINSH_USING_MSH
-#include <msh.h>
-const char cmd[] = "/mrvl/init.sh";
-#endif
-
 int mwifi_system_init(void)
 {
     /* wait for sdio host setup */
     mdelay(200);
-    
+
     if(woal_init_module())
     {
         woal_cleanup_module();
@@ -6321,10 +6316,6 @@ int mwifi_system_init(void)
         return -RT_ERROR;
     }
 
-#if defined RT_USING_FINSH && defined FINSH_USING_MSH
-    rt_kprintf("Marvell WiFi exec init.sh...\n");
-    msh_exec((char *)cmd, sizeof(cmd));
-#endif
     rt_kprintf("Marvell WiFi initialized!\n");
 
     return RT_EOK;
