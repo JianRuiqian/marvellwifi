@@ -103,13 +103,13 @@ struct net_device {
 	char			name[IFNAMSIZ];
 
 	struct net_device_stats	stats;
-    
-    /* List of functions to handle Wireless Extensions (instead of ioctl).
+
+	/* List of functions to handle Wireless Extensions (instead of ioctl).
 	 * See <net/iw_handler.h> for details. Jean II */
 	const struct iw_handler_def *	wireless_handlers;
 	/* Instance data managed by the core of Wireless Extensions. */
 	struct iw_public_data *	wireless_data;
-    
+
 	const struct net_device_ops *netdev_ops;
 
 	unsigned int		flags;
@@ -121,8 +121,8 @@ struct net_device {
 	unsigned int		promiscuity;
 	unsigned int		allmulti;
 
-    struct netdev_hw_addr_list	uc;
-    struct netdev_hw_addr_list	mc;
+	struct netdev_hw_addr_list	uc;
+	struct netdev_hw_addr_list	mc;
 
 	/* Protocol-specific pointers */
 	struct wireless_dev	*ieee80211_ptr;
@@ -130,7 +130,7 @@ struct net_device {
 	/* Interface address info used in eth_type_trans() */
 	unsigned char		dev_addr[ETH_ALEN];
     
-    int			        watchdog_timeo;
+    int					watchdog_timeo;
     
     /* register/unregister state machine */
 	enum { NETREG_UNINITIALIZED=0,
@@ -140,11 +140,11 @@ struct net_device {
 	       NETREG_RELEASED,		/* called free_netdev */
 	       NETREG_DUMMY,		/* dummy device for NAPI poll */
 	} reg_state:8;
-    
-    /* Called from unregister, can be used to call free_netdev */
+
+	/* Called from unregister, can be used to call free_netdev */
 	void (*destructor)(struct net_device *dev);
-    
-    struct eth_device   dev;
+
+	struct eth_device	dev;
 };
 
 /**
@@ -166,15 +166,15 @@ static inline void *netdev_priv(const struct net_device *dev)
 struct net_device_ops {
 	int			(*ndo_open)(struct net_device *dev);
 	int			(*ndo_stop)(struct net_device *dev);
-	int		    (*ndo_start_xmit)(struct sk_buff *skb,
-						  struct net_device *dev);
-    u16			(*ndo_select_queue)(struct net_device *dev,
-						    struct sk_buff *skb);
-	void			(*ndo_set_rx_mode)(struct net_device *dev);
+	int			(*ndo_start_xmit)(struct sk_buff *skb,
+							struct net_device *dev);
+	u16			(*ndo_select_queue)(struct net_device *dev,
+							struct sk_buff *skb);
+	void		(*ndo_set_rx_mode)(struct net_device *dev);
 	int			(*ndo_set_mac_address)(struct net_device *dev,
-						       void *addr);
+							void *addr);
 	int			(*ndo_do_ioctl)(struct net_device *dev,
-					        struct ifreq *ifr, int cmd);
+							struct ifreq *ifr, int cmd);
 	void			(*ndo_tx_timeout) (struct net_device *dev);
 	struct net_device_stats* (*ndo_get_stats)(struct net_device *dev);
 };

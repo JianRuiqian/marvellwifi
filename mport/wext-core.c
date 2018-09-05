@@ -22,6 +22,6 @@ void wireless_send_event(struct net_device *	dev,
 			 union iwreq_data *	wrqu,
 			 const char *		extra)
 {
-    if (cmd == IWEVCUSTOM)
-        printk("%s\n", extra);
+	if (cmd == IWEVCUSTOM)
+		printk("%s\n", extra);
 }
