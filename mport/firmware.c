@@ -10,7 +10,7 @@ int request_firmware(const struct firmware **fw, const char *file)
     result = stat(file, &st);
     if (result < 0)
     {
-        rt_kprintf("firmware:[%s] not found!\n");
+        rt_kprintf("firmware:[%s] not found!\n", file);
         return -RT_ERROR;
     }
 

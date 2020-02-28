@@ -239,6 +239,7 @@ rt_err_t mwifi_powersave(struct net_device *ndev, int enabled)
     return ret;
 }
 
+#if defined(REASSOCIATION)
 rt_err_t mwifi_reassociation(struct net_device *ndev, int enabled)
 {
     struct ifreq ifr;
@@ -262,6 +263,7 @@ rt_err_t mwifi_reassociation(struct net_device *ndev, int enabled)
 
     return ret;
 }
+#endif
 
 rt_err_t mwifi_set_region(struct net_device *ndev, const char *country)
 {
@@ -411,6 +413,7 @@ int cmd_mwifi(int argc, char **argv)
                 }
                 mwifi_powersave(ndev, enabled);
             }
+#if defined(REASSOCIATION)
             else if (!strcmp("reassoc", argv[2]))
             {
                 int enabled = -1;
@@ -432,6 +435,7 @@ int cmd_mwifi(int argc, char **argv)
                 }
                 mwifi_reassociation(ndev, enabled);
             }
+#endif
             else if (!strcmp("region", argv[2]) && argc == 4)
                 mwifi_set_region(ndev, argv[3]);
             else
