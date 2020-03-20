@@ -212,7 +212,7 @@ rt_err_t mwifi_scan(struct net_device *ndev)
 
     RT_ASSERT(ndev);
 
-	memcpy(cmd_buf, WEXT_CSCAN_HEADER, sizeof(cmd_buf));
+    memcpy(cmd_buf, WEXT_CSCAN_HEADER, sizeof(cmd_buf));
     uwrq.data.pointer = cmd_buf;
     uwrq.data.length = WEXT_CSCAN_HEADER_SIZE;
     ret = ndev->wireless_handlers->standard
