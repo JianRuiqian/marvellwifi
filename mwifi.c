@@ -207,11 +207,13 @@ rt_err_t mwifi_disconnect(struct net_device *ndev)
 rt_err_t mwifi_scan(struct net_device *ndev)
 {
     union iwreq_data uwrq;
+    char cmd_buf[sizeof(WEXT_CSCAN_HEADER)] = {0};
     rt_err_t ret = -RT_ERROR;
 
     RT_ASSERT(ndev);
 
-    uwrq.data.pointer = WEXT_CSCAN_HEADER;
+    memcpy(cmd_buf, WEXT_CSCAN_HEADER, sizeof(cmd_buf));
+    uwrq.data.pointer = cmd_buf;
     uwrq.data.length = WEXT_CSCAN_HEADER_SIZE;
     ret = ndev->wireless_handlers->standard
           [IW_IOCTL_IDX(SIOCSIWPRIV)](ndev, NULL, &uwrq, NULL);
